@@ -9,4 +9,4 @@ router = APIRouter()
 async def chat(request: ChatRequest):
     llm = GeminiLLM()
     response = llm.send_response(request.user_message, [])
-    return {"response": response}
+    return {"response": response , "done": "INTERVIEW_DONE" in response}
