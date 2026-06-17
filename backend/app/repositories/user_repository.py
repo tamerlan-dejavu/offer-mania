@@ -1,3 +1,4 @@
+from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.models.user import User
@@ -9,6 +10,11 @@ class UserRepository:
 
     async def get_user_by_email(self, email: str) -> User | None:
         stmt = select(User).where(User.email == email)
+        result = await self.session.execute(stmt)
+        return result.scalars().first()
+
+    async def get_user_by_id(self, user_id: UUID) -> User | None:
+        stmt = select(User).where(User.id == user_id)
         result = await self.session.execute(stmt)
         return result.scalars().first()
 
