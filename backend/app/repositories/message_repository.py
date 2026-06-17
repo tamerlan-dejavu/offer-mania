@@ -20,8 +20,6 @@ class MessageRepository:
             content=content
         )
         self.session.add(message)
-        await self.session.commit()
-        await self.session.refresh(message)
         return message
 
     async def get_messages_by_session_id(self, session_id: UUID) -> list[Message]:

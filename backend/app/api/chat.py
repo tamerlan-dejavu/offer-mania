@@ -65,5 +65,6 @@ async def chat(
 
     await message_repo.save_message(session_id, MessageRole.USER, request.user_message)
     await message_repo.save_message(session_id, MessageRole.ASSISTANT, response)
+    await db_session.commit()
 
     return {"response": response, "done": "INTERVIEW_DONE" in response}
