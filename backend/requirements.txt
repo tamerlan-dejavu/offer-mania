@@ -5,3 +5,5 @@ google-generativeai
 sqlalchemy
 asyncpg
 alembic
+python-jose[cryptography]
+passlib[bcrypt]
