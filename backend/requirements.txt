@@ -2,3 +2,8 @@ fastapi
 uvicorn[standard]
 pydantic-settings
 google-generativeai
+sqlalchemy
+asyncpg
+alembic
+python-jose[cryptography]
+bcrypt
