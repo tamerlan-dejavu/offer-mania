@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.api.chat import router
+from app.api.chat import router as chat_router
+from app.api.auth import router as auth_router
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(
@@ -25,4 +26,5 @@ app = FastAPI(
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-app.include_router(router)
+app.include_router(chat_router)
+app.include_router(auth_router)
