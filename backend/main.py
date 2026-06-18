@@ -4,6 +4,7 @@ from app.api.auth import router as auth_router
 from app.api.onboarding import router as onboarding_router
 from app.api.sessions import router as sessions_router
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="Offer-Mania API",
@@ -32,3 +33,10 @@ app.include_router(chat_router)
 app.include_router(auth_router)
 app.include_router(onboarding_router)
 app.include_router(sessions_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
