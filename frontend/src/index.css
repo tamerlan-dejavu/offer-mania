@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+@theme {
+  --color-midnight-ink: #05060f;
+  --color-graphite-plate: #2f343e;
+  --color-steel-border: #3f4959;
+  --color-fog: #81899b;
+  --color-pebble: #9da7ba;
+  --color-moonlight: #c7d3ea;
+  --color-ice: #d1e4fa;
+  --color-glacier: #d8ecf8;
+  --color-frost-link: #b6d9fc;
+  --color-electric-iris: #663af3;
+  --color-ember: #e46d4c;
+  --color-azure: #027dea;
+  --color-cipher-mint: #269684;
+  --color-blueprint-glow: #bacff7;
+
+  --font-untitled-sans: 'Untitled Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-aeonikpro: 'aeonikPro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dotdigital: 'dotDigital', ui-monospace, "JetBrains Mono", monospace;
+}
+
+:root {
+  --color-midnight-ink: #05060f;
+  --color-graphite-plate: #2f343e;
+  --color-steel-border: #3f4959;
+  --color-fog: #81899b;
+  --color-pebble: #9da7ba;
+  --color-moonlight: #c7d3ea;
+  --color-ice: #d1e4fa;
+  --color-glacier: #d8ecf8;
+  --color-frost-link: #b6d9fc;
+  --color-electric-iris: #663af3;
+  --color-ember: #e46d4c;
+  --color-azure: #027dea;
+  --color-cipher-mint: #269684;
+  --color-blueprint-glow: #bacff7;
+  --gradient-blueprint-glow: linear-gradient(0deg, #d8ecf8 0%, #98c0ef 100%);
+
+  --font-untitled-sans: 'Untitled Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-aeonikpro: 'aeonikPro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dotdigital: 'dotDigital', ui-monospace, "JetBrains Mono", monospace;
+}
+
+body {
+  background-color: var(--color-midnight-ink);
+  color: var(--color-moonlight);
+  font-family: var(--font-untitled-sans);
+}
