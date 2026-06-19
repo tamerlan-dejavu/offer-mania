@@ -28,3 +28,25 @@ class GeminiLLM(LLMBase):
             config=config
         )
         return response.text
+
+    def stream_response(self, user_message: str, user_history: list = None, system_prompt: str = None):
+        if system_prompt is None:
+            system_prompt = prompts
+
+        config = types.GenerateContentConfig(
+            system_instruction=system_prompt
+        )
+
+        contents = []
+        if user_history:
+            contents.extend(user_history)
+
+        contents.append({"role": "user", "parts": [{"text": user_message}]})
+
+        for chunk in self.client.models.generate_content_stream(
+            model="gemini-2.5-flash-lite",
+            contents=contents,
+            config=config
+        ):
+            if chunk.text:
+                yield chunk.text
