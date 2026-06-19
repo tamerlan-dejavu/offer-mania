@@ -10,34 +10,90 @@ export default function InterviewPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const bottomRef = useRef(null);
+  const queueRef = useRef([]);
+  const typingRef = useRef(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const startTyping = () => {
+    if (typingRef.current) return;
+    typingRef.current = true;
+
+    const tick = () => {
+      if (queueRef.current.length === 0) {
+        typingRef.current = false;
+        return;
+      }
+
+      const char = queueRef.current.shift();
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          role: 'assistant',
+          content: updated[updated.length - 1].content + char,
+        };
+        return updated;
+      });
+
+      setTimeout(tick, 8);
+    };
+
+    tick();
+  };
+
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || loading) return;
 
-    const userMessage = { role: 'user', content: text };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => [...prev, { role: 'user', content: text }]);
     setInput('');
     setLoading(true);
     setError('');
 
+    const token = localStorage.getItem('token');
+
     try {
-      const { data } = await api.post('/chat', {
-        user_message: text,
-        session_id: id,
+      const response = await fetch('http://localhost:8000/chat/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ user_message: text, session_id: id }),
       });
 
-      setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || 'Something went wrong');
+      }
 
-      if (data.done) {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+
+      queueRef.current = [];
+      setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+
+        for (const char of chunk) {
+          queueRef.current.push(char);
+        }
+        startTyping();
+      }
+
+      if (fullText.includes('INTERVIEW_DONE')) {
         navigate(`/report/${id}`);
       }
     } catch (err) {
-      setError(err.response?.data?.detail || 'Something went wrong');
+      setError(err.message || 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -113,7 +169,7 @@ export default function InterviewPage() {
           </div>
         ))}
 
-        {loading && (
+        {loading && queueRef.current.length === 0 && messages[messages.length - 1]?.role !== 'assistant' && (
           <div className="flex justify-start">
             <div
               className="rounded-[10px] px-4 py-3"
@@ -124,7 +180,7 @@ export default function InterviewPage() {
                 fontSize: '15px',
               }}
             >
-              Thinking...
+              <span style={{ letterSpacing: '0.1em' }}>···</span>
             </div>
           </div>
         )}
